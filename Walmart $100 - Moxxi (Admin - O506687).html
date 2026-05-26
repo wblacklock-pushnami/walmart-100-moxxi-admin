@@ -253,6 +253,52 @@
       z-index: 50;
     }
 
+    /* ── Countdown pill at top of card ── */
+    .countdown {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(239, 68, 68, 0.14);
+      border: 1px solid rgba(239, 68, 68, 0.38);
+      color: #ffd2d2;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      margin: 0 auto 22px;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    .countdown-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ef4444;
+      box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.65);
+      animation: countdown-pulse 1.4s ease-out infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes countdown-pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.65); }
+      70%  { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+
+    .countdown-time {
+      font-variant-numeric: tabular-nums;
+      color: #fff;
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: 0.4px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .countdown-dot { animation: none; }
+    }
+
     /* Gift card visual */
     .gc-wrap {
       display: block;
@@ -419,6 +465,12 @@
   <!-- Main -->
   <main class="main">
     <div class="card">
+      <p class="countdown rise" aria-live="polite">
+        <span class="countdown-dot" aria-hidden="true"></span>
+        <span>Time running out</span>
+        <span class="countdown-time" id="countdown-time">01:00</span>
+      </p>
+
       <!-- Walmart $100 Gift Card -->
       <div class="gc-wrap rise rise-1">
         <img src="walmartgc_100.png" alt="$100 Walmart Gift Card" width="554" height="350">
@@ -468,6 +520,26 @@
   <canvas id="confetti" class="confetti-canvas" aria-hidden="true"></canvas>
 
   <script>
+    // Countdown timer — counts down from 1:00, loops back when it hits 0.
+    (function () {
+      var el = document.getElementById('countdown-time');
+      if (!el) return;
+      var START = 60;
+      var seconds = START;
+      function render() {
+        var m = Math.floor(seconds / 60);
+        var s = seconds % 60;
+        el.textContent =
+          (m < 10 ? '0' + m : m) + ':' +
+          (s < 10 ? '0' + s : s);
+      }
+      render();
+      setInterval(function () {
+        seconds = seconds > 0 ? seconds - 1 : START;
+        render();
+      }, 1000);
+    })();
+
     // Social-proof count — monotonically increases on each page load.
     // Stored in localStorage so the number only ever goes up (min +10 per refresh).
     (function () {

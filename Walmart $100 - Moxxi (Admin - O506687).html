@@ -256,6 +256,8 @@
     /* Gift card visual */
     .gc-wrap {
       display: block;
+      position: relative;
+      z-index: 3;
       width: 100%;
       max-width: 260px;
       margin: 0 auto 18px;
@@ -263,6 +265,12 @@
       transform-origin: center;
       animation: gc-wobble 3.8s ease-in-out infinite alternate;
       will-change: transform;
+    }
+
+    /* Headline sits underneath the gift card's shadow */
+    .card .headline-img {
+      position: relative;
+      z-index: 1;
     }
 
     /* When the gift card also rises, run rise first, then wobble */
